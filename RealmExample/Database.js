@@ -77,8 +77,11 @@ let getAllAuthors = () => {
 // Add a single author using parameters
 let addAuthor = (_firstName, _lastName) => {
     realm.write(() => {
+        let _id = 0;
+        if (getAllAuthors().length > 0) _id = realm.objects('Author').max('id')+1;
+
         const book = realm.create( 'Author',{
-            id: realm.objects('Author').max('id')+1,
+            id: _id,
             firstName: _firstName,
             lastName:  _lastName
         });
@@ -92,16 +95,10 @@ let deleteAllAuthors = () => {
     });
 };
 
-// Get author by index in the array
+// Get author by id
 let getAuthorById = (_id) => {
     return realm.objects('Author').filtered(`id = ${_id}`);
 }
-
-realm.write(() => {
-    let author = getAuthorById(0)[0];
-    author.firstName = "Steven";
-})
-
 
 // Exports
 // Export the realm so other files can access it
@@ -116,5 +113,6 @@ export {
     getBigBooks,
     getAllAuthors,
     addAuthor,
-    getAuthorById
+    getAuthorById,
+    deleteAllAuthors
 }
